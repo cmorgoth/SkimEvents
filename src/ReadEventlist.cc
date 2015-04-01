@@ -41,7 +41,7 @@ bool FillMap( std::map< std::string , RunAndEvent >& mymap, std::string fname )
 };
 
 void SkimTree( std::map< std::string, RunAndEvent > mymap, std::string list_name,
-	       std::string tree_name, std::string run_branch, std::string event_branch)
+	       std::string tree_name, std::string run_branch, std::string event_branch, std::string root_output )
 {
   int run;
   unsigned long long event;
@@ -73,7 +73,7 @@ void SkimTree( std::map< std::string, RunAndEvent > mymap, std::string list_name
   chain->SetBranchAddress(event_branch.c_str(), &event);
   
   //Create a new file + a clone of old tree in new file
-  TFile *newfile = new TFile("small.root","recreate");
+  TFile *newfile = new TFile( root_output.c_str(), "recreate" );
   TTree *newtree = chain->CloneTree(0);
   
   for ( long long i = 0; i < nentries; i++ )
