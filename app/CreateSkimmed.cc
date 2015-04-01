@@ -11,6 +11,14 @@ void Usage();
 
 int main( int argc, char* argv[] )
 {
+  //Asking for help
+  if( ParseCommandLine( argc, argv, "-help" ) != "" )
+    {
+      std::cout << "======================[HELP]=======================" << std::endl;
+      Usage();
+      return 0;
+    }
+  
   if ( argc <=3 )
     {
       std::cerr << "[ERROR]: insufficient command line arguments provided" << std::endl;
@@ -111,6 +119,7 @@ void Usage()
   
   std::cout << "[USAGE]: ./CreateSkimmed <options>" << std::endl;
   std::cout << "[USAGE]: available <options> are the following:" << std::endl;
+  std::cout << "[USAGE]: --help: print this message" << std::endl;
   std::cout << "[USAGE]: --event_list=<run_event_file_name>;\nplease provide in <run_event_file_name> with file name containing the run and event you want to select" << std::endl;
   std::cout << "[USAGE]: --list_of_ntuples==<ntuple_list_file_name>;\nplease provide in <ntuple_list_file_name> with file name containing the original ntuple list" << std::endl;
   std::cout << "[USAGE]: --output_name==<output_root_file_name>;\nplease provide in <output_root_file_name> with the root file output name for the selected events" << std::endl;
