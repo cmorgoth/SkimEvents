@@ -43,8 +43,9 @@ bool FillMap( std::map< std::string , RunAndEvent >& mymap, std::string fname )
 void SkimTree( std::map< std::string, RunAndEvent > mymap, std::string list_name,
 	       std::string tree_name, std::string run_branch, std::string event_branch, std::string root_output )
 {
-  int run;
-  unsigned long long event;
+  //int run;
+  //unsigned long long event;
+  unsigned int run, event;
   int ctr = 1;//file counter
   TChain* chain = new TChain( tree_name.c_str() );
   std::ifstream file ( list_name.c_str(), std::ifstream::in );
@@ -75,6 +76,31 @@ void SkimTree( std::map< std::string, RunAndEvent > mymap, std::string list_name
   //Create a new file + a clone of old tree in new file
   TFile *newfile = new TFile( root_output.c_str(), "recreate" );
   TTree *newtree = chain->CloneTree(0);
+
+  /*
+  for ( auto& m_tmp : mymap )
+    {
+      std::cout << m_tmp.first << std::endl;
+      std::string m_str = m_tmp.first; 
+      for ( long long i = 0; i < nentries; i++ )
+	{
+	  chain->GetEntry(i);
+	  std::stringstream tmp;
+	  std::string tmp_s;
+	  tmp << run << " " << event;
+	  tmp_s = tmp.str();
+	  //std::cout << tmp_s << std::endl;
+	  //tmp_s = "191046 309473973";
+	  if ( m_str.compare( tmp_s ) == 0 ) 
+	    {
+	      newtree->Fill();
+	      std::cout << "[DEBUG:] found" << std::endl;
+	      break;
+	    }
+	}
+      
+    }
+  */
   
   for ( long long i = 0; i < nentries; i++ )
     {
@@ -84,7 +110,10 @@ void SkimTree( std::map< std::string, RunAndEvent > mymap, std::string list_name
       std::string tmp_s;
       tmp << run << " " << event;
       tmp_s = tmp.str();
-      if( mymap.find( tmp_s ) != mymap.end() )newtree->Fill();
+      if( mymap.find( tmp_s ) != mymap.end() ){
+	newtree->Fill();
+	std::cout << tmp_s << std::endl;
+      }
     }
   
   newtree->Print();
