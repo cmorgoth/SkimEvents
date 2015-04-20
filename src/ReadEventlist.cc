@@ -3,6 +3,7 @@
 #include <TString.h>
 #include <TTree.h>
 #include <TChain.h>
+#include <TDirectory.h>
 #include <TFile.h>
 //LOCAL INCLUDES
 #include "ReadEventlist.hh"
@@ -41,13 +42,15 @@ bool FillMap( std::map< std::string , RunAndEvent >& mymap, std::string fname )
 };
 
 void SkimTree( std::map< std::string, RunAndEvent > mymap, std::string list_name,
-	       std::string tree_name, std::string run_branch, std::string event_branch, std::string root_output )
+	       std::string tree_name, std::string run_branch, std::string event_branch, std::string root_output,
+	       bool Tdir )
 {
   //int run;
   //unsigned long long event;
   unsigned int run, event;
   int ctr = 1;//file counter
   TChain* chain = new TChain( tree_name.c_str() );
+  
   std::ifstream file ( list_name.c_str(), std::ifstream::in );
   if ( file.is_open() )
     {
@@ -58,7 +61,29 @@ void SkimTree( std::map< std::string, RunAndEvent > mymap, std::string list_name
 	  if( s != "" ) 
 	    {
 	      std::cout << "[INFO]: adding file #" << ctr << ": " << s << std::endl;
-	      chain->Add(s);
+	      if ( Tdir ==  true )
+		{
+		  /*
+		  TFile* f = new TFile();
+		  f->Open( s );
+		  std::cout << "DEB 0" << std::endl;
+		  //gDirectory->Get("ntuples");
+		  std::cout << "DEB 1" << std::endl;
+		  TTree* tree = (TTree*)((TDirectory*)gDirectory->Get("ntuples"))->Get( tree_name.c_str() );
+		  //TChain* tree = (TChain*)gDirectory->Get( tree_name.c_str() );
+		  std::cout << "DEB 2 " << std::endl;
+		  tree->Print();
+		  TChain* c = (TChain*)tree; 
+		  //chain->Add( tree );
+		  std::cout << "DEB 3" << std::endl;
+		  */
+		  s = s + "/ntuples/" + tree_name.c_str();
+		  chain->Add(s);
+		}
+	      else
+		{
+		  chain->Add(s);
+		}
 	      ctr++;
 	    }
         }

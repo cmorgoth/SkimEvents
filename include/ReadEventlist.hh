@@ -26,6 +26,7 @@ struct RunAndEvent
 
 bool FillMap( std::map< std::string, RunAndEvent >& mymap, std::string fname );
 void SkimTree( std::map< std::string, RunAndEvent > mymap, std::string list_name, 
-	       std::string tree_name, std::string run_branch, std::string event_branch, std::string root_output);
+	       std::string tree_name, std::string run_branch, std::string event_branch, std::string root_output,
+	       bool Tdir = false );
 
 #endif

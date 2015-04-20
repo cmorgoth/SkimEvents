@@ -6,8 +6,8 @@ import sys
 ### usage  cmst3_submit_manyfilesperjob.py dataset njobs applicationName queue 
 #######################################
 if len(sys.argv) < 5:
-    print "usage Submit-lxplus.sh ProcessName sampleList.list files_per_job pick_events.txt"
-    print "e.g: python Submit-lxplus.sh ProcessName list.txt  files_per_job pick_events.txt"
+    print "usage Submit-lxplus.sh ProcessName sampleList.list files_per_job pick_events.txt treeName runBranch eventBranch"
+    print "e.g: python Submit-lxplus.sh ProcessName list.txt  files_per_job pick_events.txt treeName runBranch eventBranch"
     sys.exit(1)
 
 
@@ -89,13 +89,15 @@ for ijob in range(njobs):
             continue
     inputfile.close()
 
-    outputName = "submission/" + process + "/src/submit_" + str(ijob) + ".sh"
+    outputName = pwd + "/submission/" + process + "/src/submit_" + str(ijob) + ".sh"
     rootOutput = pwd + "/submission/" + process + "/out/" + process + "_" + str(ijob) + ".root"
-    logName = pwd + "/submission/" + process + "/log/submit_" + str(ijob)
+    logName = pwd + "/submission/" + process + "/log/log_" + str(ijob)
+    errName = pwd + "/submission/" + process + "/log/err_" + str(ijob)
     outputfile = open(outputName,'w')
     outputfile.write("#!/bin/sh\n\n")
     
     outputfile.write( "cd " + pwd )
+    outputfile.write( "\neval `scramv1 run -sh`;")
     outputfile.write( "\n./CreateSkimmed --event_list==" + pick_events  
                       + " --list_of_ntuples==" + inputfilename 
                       + " --output_name==" + rootOutput
@@ -105,6 +107,7 @@ for ijob in range(njobs):
                       )
         
     outputfile.close
+    os.system("bsub -q 1nh source " + outputName + " -o " +logName+ " -e " +errName)
     os.system("sleep .1\n")
     scriptfile=pwd+"/"+outputName
     ijob = ijob+1

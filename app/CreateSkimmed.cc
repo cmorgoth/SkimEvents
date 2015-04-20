@@ -92,7 +92,7 @@ int main( int argc, char* argv[] )
     }
   */
   //Skimming Tree
-  SkimTree( mymap, list_name, tree_name, run_branch, event_branch, root_output );
+  SkimTree( mymap, list_name, tree_name, run_branch, event_branch, root_output, true );
   return 0;
 };
 
